@@ -22,40 +22,68 @@
 <body>
 
   <main>
-    <h1>FocusForge 🚀</h1>
+    <header>
+      <h1>FocusForge 🚀</h1>
+      <button id="themeToggle" class="theme-btn">🌙 Dark</button>
+    </header>
 
-    <!-- ⏱️ Timer -->
+    <!-- ⏱️ Timer Section -->
     <section class="timer" aria-label="Pomodoro Timer">
+      <div class="timer-type">
+        <button id="workBtn" class="timer-type-btn active">Work</button>
+        <button id="breakBtn" class="timer-type-btn">Break</button>
+      </div>
+      
       <h2 id="time" aria-live="polite">25:00</h2>
       
-      <section class="tasks" aria-label="Task Manager">
-  <h2>Tasks</h2>
-
-  <div class="task-input">
-    <input type="text" id="taskInput" placeholder="Add a task..." />
-    <button id="addTaskBtn">Add</button>
-  </div>
-
-  <ul id="taskList"></ul>
-</section>
-
-      <div class="buttons">
-        <button id="startBtn">Start</button>
-        <button id="resetBtn">Reset</button>
+      <div class="timer-controls">
+        <button id="startBtn" class="primary-btn">Start</button>
+        <button id="resetBtn" class="secondary-btn">Reset</button>
       </div>
+
+      <!-- ⚠️ Status -->
+      <p id="status"></p>
+
+      <!-- 📊 Statistics -->
+      <section class="stats" aria-label="Session Statistics">
+        <h3>Today's Stats</h3>
+        <div class="stat-grid">
+          <div class="stat-card">
+            <p class="stat-label">Sessions</p>
+            <p class="stat-value" id="sessionsCount">0</p>
+          </div>
+          <div class="stat-card">
+            <p class="stat-label">Focus Time</p>
+            <p class="stat-value" id="focusTime">0m</p>
+          </div>
+          <div class="stat-card">
+            <p class="stat-label">Tasks Done</p>
+            <p class="stat-value" id="tasksCompleted">0</p>
+          </div>
+        </div>
+      </section>
     </section>
 
-    <!-- ⚠️ Status -->
-    <p id="status"></p>
-    <!-- 📝 Tasks -->
-<section class="tasks" aria-label="Task Manager">
-  <h2>Tasks</h2>
-  <div class="task-input">
-    <input type="text" id="taskInput" placeholder="Add a task..." />
-    <button id="addTaskBtn">Add</button>
-  </div>
-  <ul id="taskList"></ul>
-</section>
+    <!-- 📝 Tasks Section -->
+    <section class="tasks" aria-label="Task Manager">
+      <h2>Tasks</h2>
+
+      <div class="task-input">
+        <input type="text" id="taskInput" placeholder="Add a task..." />
+        <button id="addTaskBtn">+ Add</button>
+      </div>
+
+      <div class="task-filters">
+        <button id="filterAll" class="filter-btn active">All</button>
+        <button id="filterActive" class="filter-btn">Active</button>
+        <button id="filterCompleted" class="filter-btn">Completed</button>
+      </div>
+
+      <ul id="taskList"></ul>
+
+      <button id="clearCompleted" class="clear-btn">Clear Completed</button>
+    </section>
+
   </main>
 
   <!-- ⚡ Script -->
