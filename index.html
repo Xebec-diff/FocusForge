@@ -27,6 +27,17 @@
     <!-- ⏱️ Timer -->
     <section class="timer" aria-label="Pomodoro Timer">
       <h2 id="time" aria-live="polite">25:00</h2>
+      
+      <section class="tasks" aria-label="Task Manager">
+  <h2>Tasks</h2>
+
+  <div class="task-input">
+    <input type="text" id="taskInput" placeholder="Add a task..." />
+    <button id="addTaskBtn">Add</button>
+  </div>
+
+  <ul id="taskList"></ul>
+</section>
 
       <div class="buttons">
         <button id="startBtn">Start</button>
