@@ -338,6 +338,10 @@ li.completed {
   color: var(--text-secondary);
 }
 
+li.hidden {
+  display: none;
+}
+
 li .deleteBtn {
   background: transparent;
   color: #ef4444;
@@ -348,11 +352,13 @@ li .deleteBtn {
   cursor: pointer;
   flex-shrink: 0;
   transition: var(--transition);
+  border-radius: 4px;
 }
 
 li .deleteBtn:hover {
   color: #dc2626;
   transform: scale(1.2);
+  background: rgba(239, 68, 68, 0.1);
 }
 
 /* =============== Clear Completed Button =============== */

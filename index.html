@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   
@@ -24,25 +24,25 @@
   <main>
     <header>
       <h1>FocusForge 🚀</h1>
-      <button id="themeToggle" class="theme-btn">🌙 Dark</button>
+      <button id="themeToggle" class="theme-btn" aria-label="Toggle theme">🌙 Dark</button>
     </header>
 
     <!-- ⏱️ Timer Section -->
     <section class="timer" aria-label="Pomodoro Timer">
       <div class="timer-type">
-        <button id="workBtn" class="timer-type-btn active">Work</button>
-        <button id="breakBtn" class="timer-type-btn">Break</button>
+        <button id="workBtn" class="timer-type-btn active" aria-pressed="true">Work (25min)</button>
+        <button id="breakBtn" class="timer-type-btn" aria-pressed="false">Break (5min)</button>
       </div>
       
-      <h2 id="time" aria-live="polite">25:00</h2>
+      <h2 id="time" aria-live="polite" role="status">25:00</h2>
       
       <div class="timer-controls">
-        <button id="startBtn" class="primary-btn">Start</button>
-        <button id="resetBtn" class="secondary-btn">Reset</button>
+        <button id="startBtn" class="primary-btn" aria-label="Start or pause timer">Start</button>
+        <button id="resetBtn" class="secondary-btn" aria-label="Reset timer">Reset</button>
       </div>
 
       <!-- ⚠️ Status -->
-      <p id="status"></p>
+      <p id="status" aria-live="assertive" role="status"></p>
 
       <!-- 📊 Statistics -->
       <section class="stats" aria-label="Session Statistics">
@@ -69,19 +69,19 @@
       <h2>Tasks</h2>
 
       <div class="task-input">
-        <input type="text" id="taskInput" placeholder="Add a task..." />
-        <button id="addTaskBtn">+ Add</button>
+        <input type="text" id="taskInput" placeholder="Add a task..." aria-label="Task input" />
+        <button id="addTaskBtn" aria-label="Add task">+ Add</button>
       </div>
 
       <div class="task-filters">
-        <button id="filterAll" class="filter-btn active">All</button>
-        <button id="filterActive" class="filter-btn">Active</button>
-        <button id="filterCompleted" class="filter-btn">Completed</button>
+        <button id="filterAll" class="filter-btn active" aria-pressed="true">All</button>
+        <button id="filterActive" class="filter-btn" aria-pressed="false">Active</button>
+        <button id="filterCompleted" class="filter-btn" aria-pressed="false">Completed</button>
       </div>
 
       <ul id="taskList"></ul>
 
-      <button id="clearCompleted" class="clear-btn">Clear Completed</button>
+      <button id="clearCompleted" class="clear-btn" aria-label="Clear completed tasks">Clear Completed</button>
     </section>
 
   </main>

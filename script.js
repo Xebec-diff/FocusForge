@@ -1,111 +1,340 @@
-let time = 1500;
-let timer = null;
+// ============================================
+// THEME TOGGLE
+// ============================================
+const themeBtn = document.getElementById('themeToggle');
+const html = document.documentElement;
 
-const timeDisplay = document.getElementById("time");
-const status = document.getElementById("status");
-const startBtn = document.getElementById("startBtn");
-const resetBtn = document.getElementById("resetBtn");
+function initTheme() {
+  const savedTheme = localStorage.getItem('theme') || 'dark';
+  html.setAttribute('data-theme', savedTheme);
+  updateThemeBtn(savedTheme);
+}
+
+function updateThemeBtn(theme) {
+  themeBtn.textContent = theme === 'dark' ? '☀️ Light' : '🌙 Dark';
+}
+
+themeBtn.addEventListener('click', () => {
+  const currentTheme = html.getAttribute('data-theme');
+  const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', newTheme);
+  localStorage.setItem('theme', newTheme);
+  updateThemeBtn(newTheme);
+});
+
+// ============================================
+// TIMER FUNCTIONALITY
+// ============================================
+let time = 1500; // 25 minutes
+let timerInterval = null;
+let isRunning = false;
+let currentMode = 'work'; // 'work' or 'break'
+let focusTimeToday = 0; // in seconds
+let sessionsCompleted = 0;
+
+const timeDisplay = document.getElementById('time');
+const status = document.getElementById('status');
+const startBtn = document.getElementById('startBtn');
+const resetBtn = document.getElementById('resetBtn');
+const workBtn = document.getElementById('workBtn');
+const breakBtn = document.getElementById('breakBtn');
+const sessionsCountDisplay = document.getElementById('sessionsCount');
+const focusTimeDisplay = document.getElementById('focusTime');
 
 function updateDisplay() {
   const minutes = Math.floor(time / 60);
   const seconds = time % 60;
-
-  timeDisplay.textContent =
-    `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+  timeDisplay.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
 }
 
-function startTimer() {
-  if (timer) {
-    status.textContent = "Timer already running...";
-    return;
-  }
-
-  status.textContent = "Focus session started 🔥";
-
-  timer = setInterval(() => {
-    if (time > 0) {
-      time--;
-      updateDisplay();
-    } else {
-      clearInterval(timer);
-      timer = null;
-      status.textContent = "Session complete 🎉";
-    }
-  }, 1000);
-}
-
-function resetTimer() {
-  clearInterval(timer);
-  timer = null;
-  time = 1500;
-  updateDisplay();
-  status.textContent = "Timer reset";
-}
-
-startBtn.addEventListener("click", startTimer);
-resetBtn.addEventListener("click", resetTimer);
-
-updateDisplay();
-const taskInput = document.getElementById("taskInput");
-const addTaskBtn = document.getElementById("addTaskBtn");
-const taskList = document.getElementById("taskList");
-
-function addTask() {
-  const taskText = taskInput.value.trim();
-
-  if (taskText === "") return;
-
-  const li = document.createElement("li");
-  li.textContent = taskText;
-
-  // Toggle complete
-  li.addEventListener("click", () => {
-    li.classList.toggle("completed");
-  });
-
-  // Delete button
-  const deleteBtn = document.createElement("button");
-  deleteBtn.textContent = "❌";
-  deleteBtn.onclick = (e) => {
-    e.stopPropagation();
-    li.remove();
-  };
-
-  li.appendChild(deleteBtn);
-  taskList.appendChild(li);
-
-  taskInput.value = "";
-}
-
-addTaskBtn.addEventListener("click", addTask);
-// Enter key for tasks
-taskInput.addEventListener("keydown", (e) => {
-  if (e.key === "Enter") addTask();
-});
-
-// Replace startTimer with start/pause toggle
-function toggleTimer() {
-  if (timer) {
-    clearInterval(timer);
-    timer = null;
-    startBtn.textContent = "Resume";
-    status.textContent = "Paused ⏸";
+function switchMode(mode) {
+  currentMode = mode;
+  isRunning = false;
+  clearInterval(timerInterval);
+  
+  if (mode === 'work') {
+    time = 1500; // 25 minutes
+    workBtn.classList.add('active');
+    breakBtn.classList.remove('active');
+    workBtn.setAttribute('aria-pressed', 'true');
+    breakBtn.setAttribute('aria-pressed', 'false');
   } else {
-    startBtn.textContent = "Pause";
-    status.textContent = "Focus session started 🔥";
-    timer = setInterval(() => {
+    time = 300; // 5 minutes
+    breakBtn.classList.add('active');
+    workBtn.classList.remove('active');
+    breakBtn.setAttribute('aria-pressed', 'true');
+    workBtn.setAttribute('aria-pressed', 'false');
+  }
+  
+  startBtn.textContent = 'Start';
+  status.textContent = '';
+  updateDisplay();
+}
+
+function toggleTimer() {
+  if (isRunning) {
+    // Pause
+    clearInterval(timerInterval);
+    isRunning = false;
+    startBtn.textContent = 'Resume';
+    status.textContent = 'Paused ⏸';
+  } else {
+    // Start
+    isRunning = true;
+    startBtn.textContent = 'Pause';
+    status.textContent = currentMode === 'work' ? 'Focus session started 🔥' : 'Break time! 🌴';
+    
+    timerInterval = setInterval(() => {
       if (time > 0) {
         time--;
         updateDisplay();
+        if (currentMode === 'work') {
+          focusTimeToday++; // Track focus time in seconds
+          updateStats();
+        }
       } else {
-        clearInterval(timer);
-        timer = null;
-        startBtn.textContent = "Start";
-        status.textContent = "Session complete 🎉";
+        // Timer completed
+        clearInterval(timerInterval);
+        isRunning = false;
+        startBtn.textContent = 'Start';
+        
+        if (currentMode === 'work') {
+          sessionsCompleted++;
+          status.textContent = 'Session complete! 🎉 Take a break!';
+          updateStats();
+          playNotification();
+        } else {
+          status.textContent = 'Break complete! 💪 Ready for another session?';
+          playNotification();
+        }
       }
     }, 1000);
   }
 }
 
-// Update the event listener too:
-startBtn.addEventListener("click", toggleTimer);
+function resetTimer() {
+  clearInterval(timerInterval);
+  isRunning = false;
+  if (currentMode === 'work') {
+    time = 1500;
+  } else {
+    time = 300;
+  }
+  startBtn.textContent = 'Start';
+  status.textContent = 'Timer reset';
+  updateDisplay();
+}
+
+function playNotification() {
+  // Simple beep notification using Web Audio API
+  try {
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    const oscillator = audioContext.createOscillator();
+    const gain = audioContext.createGain();
+    
+    oscillator.connect(gain);
+    gain.connect(audioContext.destination);
+    
+    oscillator.frequency.value = 800;
+    oscillator.type = 'sine';
+    
+    gain.gain.setValueAtTime(0.3, audioContext.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+    
+    oscillator.start(audioContext.currentTime);
+    oscillator.stop(audioContext.currentTime + 0.5);
+  } catch (e) {
+    console.log('Audio notification not supported');
+  }
+}
+
+workBtn.addEventListener('click', () => switchMode('work'));
+breakBtn.addEventListener('click', () => switchMode('break'));
+startBtn.addEventListener('click', toggleTimer);
+resetBtn.addEventListener('click', resetTimer);
+
+// ============================================
+// TASK MANAGEMENT
+// ============================================
+const taskInput = document.getElementById('taskInput');
+const addTaskBtn = document.getElementById('addTaskBtn');
+const taskList = document.getElementById('taskList');
+const filterButtons = document.querySelectorAll('.filter-btn');
+const clearCompletedBtn = document.getElementById('clearCompleted');
+const tasksCompletedDisplay = document.getElementById('tasksCompleted');
+
+let tasks = [];
+let currentFilter = 'all'; // all, active, completed
+
+function loadTasks() {
+  const savedTasks = localStorage.getItem('tasks');
+  if (savedTasks) {
+    tasks = JSON.parse(savedTasks);
+    renderTasks();
+  }
+}
+
+function saveTasks() {
+  localStorage.setItem('tasks', JSON.stringify(tasks));
+}
+
+function loadStats() {
+  const savedStats = localStorage.getItem('stats');
+  if (savedStats) {
+    const stats = JSON.parse(savedStats);
+    sessionsCompleted = stats.sessions || 0;
+    focusTimeToday = stats.focusTime || 0;
+    updateStats();
+  }
+}
+
+function saveStats() {
+  localStorage.setItem('stats', JSON.stringify({
+    sessions: sessionsCompleted,
+    focusTime: focusTimeToday
+  }));
+}
+
+function updateStats() {
+  sessionsCountDisplay.textContent = sessionsCompleted;
+  const minutes = Math.floor(focusTimeToday / 60);
+  focusTimeDisplay.textContent = `${minutes}m`;
+  
+  const completedCount = tasks.filter(t => t.completed).length;
+  tasksCompletedDisplay.textContent = completedCount;
+  
+  saveStats();
+}
+
+function addTask() {
+  const taskText = taskInput.value.trim();
+  
+  if (taskText === '') {
+    status.textContent = '⚠️ Please enter a task!';
+    setTimeout(() => { status.textContent = ''; }, 2000);
+    return;
+  }
+  
+  const newTask = {
+    id: Date.now(),
+    text: taskText,
+    completed: false
+  };
+  
+  tasks.push(newTask);
+  saveTasks();
+  taskInput.value = '';
+  renderTasks();
+  updateStats();
+}
+
+function deleteTask(id) {
+  tasks = tasks.filter(t => t.id !== id);
+  saveTasks();
+  renderTasks();
+  updateStats();
+}
+
+function toggleTaskCompletion(id) {
+  const task = tasks.find(t => t.id === id);
+  if (task) {
+    task.completed = !task.completed;
+    saveTasks();
+    renderTasks();
+    updateStats();
+  }
+}
+
+function renderTasks() {
+  taskList.innerHTML = '';
+  
+  tasks.forEach(task => {
+    const li = document.createElement('li');
+    const taskSpan = document.createElement('span');
+    const deleteBtn = document.createElement('button');
+    
+    taskSpan.textContent = task.text;
+    taskSpan.style.flex = '1';
+    taskSpan.style.cursor = 'pointer';
+    
+    deleteBtn.textContent = '✕';
+    deleteBtn.className = 'deleteBtn';
+    deleteBtn.setAttribute('aria-label', `Delete task: ${task.text}`);
+    deleteBtn.onclick = (e) => {
+      e.stopPropagation();
+      deleteTask(task.id);
+    };
+    
+    if (task.completed) {
+      li.classList.add('completed');
+    }
+    
+    // Determine if task should be shown based on filter
+    if (currentFilter === 'active' && task.completed) {
+      li.classList.add('hidden');
+    } else if (currentFilter === 'completed' && !task.completed) {
+      li.classList.add('hidden');
+    }
+    
+    li.addEventListener('click', () => toggleTaskCompletion(task.id));
+    
+    li.appendChild(taskSpan);
+    li.appendChild(deleteBtn);
+    taskList.appendChild(li);
+  });
+}
+
+function clearCompleted() {
+  tasks = tasks.filter(t => !t.completed);
+  saveTasks();
+  renderTasks();
+  updateStats();
+}
+
+function setFilter(filter) {
+  currentFilter = filter;
+  
+  // Update filter button states
+  filterButtons.forEach(btn => {
+    btn.classList.remove('active');
+    btn.setAttribute('aria-pressed', 'false');
+  });
+  
+  if (filter === 'all') {
+    document.getElementById('filterAll').classList.add('active');
+    document.getElementById('filterAll').setAttribute('aria-pressed', 'true');
+  } else if (filter === 'active') {
+    document.getElementById('filterActive').classList.add('active');
+    document.getElementById('filterActive').setAttribute('aria-pressed', 'true');
+  } else if (filter === 'completed') {
+    document.getElementById('filterCompleted').classList.add('active');
+    document.getElementById('filterCompleted').setAttribute('aria-pressed', 'true');
+  }
+  
+  renderTasks();
+}
+
+// Event listeners
+addTaskBtn.addEventListener('click', addTask);
+taskInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') addTask();
+});
+
+filterButtons.forEach(btn => {
+  btn.addEventListener('click', (e) => {
+    const filterId = e.target.id;
+    if (filterId === 'filterAll') setFilter('all');
+    else if (filterId === 'filterActive') setFilter('active');
+    else if (filterId === 'filterCompleted') setFilter('completed');
+  });
+});
+
+clearCompletedBtn.addEventListener('click', clearCompleted);
+
+// ============================================
+// INITIALIZATION
+// ============================================
+initTheme();
+loadTasks();
+loadStats();
+updateDisplay();
