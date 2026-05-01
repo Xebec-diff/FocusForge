@@ -77,3 +77,11 @@ li.completed {
   text-decoration: line-through;
   opacity: 0.6;
 }
+li button {
+  background: transparent;
+  color: #ef4444;
+  padding: 2px 6px;
+  margin: 0;
+  font-size: 0.8rem;
+  border: none;
+}
