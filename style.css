@@ -35,6 +35,11 @@ body {
   font-family: "Poppins", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   text-align: center;
   background: var(--bg-primary);
+  background-image: url('https://pin.it/3yASEMTdC');
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
   color: var(--text-primary);
   margin: 0;
   padding: 0;
