@@ -8,7 +8,7 @@
   
   <!-- 🧠 SEO / UX -->
   <meta name="description" content="FocusForge - Smart study and focus app with Pomodoro timer and task tracking">
-  <meta name="theme-color" content="#0f172a">
+  <meta name="theme-color" content="#1a1a2e">
 
   <title>FocusForge</title>
 
@@ -18,14 +18,38 @@
   <!-- 🌐 Favicon -->
   <link rel="icon" href="favicon.ico">
 
+  <!-- 🔤 Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
 </head>
 <body>
 
   <main>
     <header>
       <h1>FocusForge 🚀</h1>
-      <button id="themeToggle" class="theme-btn" aria-label="Toggle theme">🌙 Dark</button>
+      <div class="header-controls">
+        <button id="musicToggle" class="music-btn" aria-label="Toggle music player" title="Toggle ambient music">🎵</button>
+        <button id="themeToggle" class="theme-btn" aria-label="Toggle theme">🌙 Dark</button>
+      </div>
     </header>
+
+    <!-- 🎵 Music Player -->
+    <section class="music-player" id="musicPlayer">
+      <h3>Ambient Sounds</h3>
+      <div class="music-options">
+        <button class="music-option" data-music="lofi" aria-label="Play lo-fi beats">🎹 Lo-Fi</button>
+        <button class="music-option" data-music="rain" aria-label="Play rain sounds">🌧️ Rain</button>
+        <button class="music-option" data-music="forest" aria-label="Play forest sounds">🌲 Forest</button>
+        <button class="music-option" data-music="coffee" aria-label="Play coffee shop sounds">☕ Café</button>
+      </div>
+      <div class="music-controls">
+        <span style="font-size: 0.85rem; color: var(--text-secondary);">Volume:</span>
+        <div class="volume-control">
+          <input type="range" id="volumeControl" min="0" max="100" value="50" aria-label="Volume control">
+        </div>
+      </div>
+      <p class="music-status" id="musicStatus">Select a sound to play</p>
+    </section>
 
     <!-- ⏱️ Timer Section -->
     <section class="timer" aria-label="Pomodoro Timer">
