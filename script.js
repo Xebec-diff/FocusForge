@@ -23,6 +23,105 @@ themeBtn.addEventListener('click', () => {
 });
 
 // ============================================
+// MUSIC PLAYER
+// ============================================
+const musicToggle = document.getElementById('musicToggle');
+const musicPlayer = document.getElementById('musicPlayer');
+const musicOptions = document.querySelectorAll('.music-option');
+const volumeControl = document.getElementById('volumeControl');
+const musicStatus = document.getElementById('musicStatus');
+
+let audioContext = null;
+let audioElement = null;
+let currentMusic = null;
+let isPlaying = false;
+
+// Music URLs (using free ambient music sources)
+const musicLibrary = {
+  lofi: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
+  rain: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3',
+  forest: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3',
+  coffee: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3'
+};
+
+// Fallback: Use Web Audio API to generate ambient sounds
+function generateAmbientSound(type) {
+  try {
+    if (!audioContext) {
+      audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    }
+
+    // Create different ambient tones based on type
+    const oscillator = audioContext.createOscillator();
+    const gain = audioContext.createGain();
+    const lowPassFilter = audioContext.createBiquadFilter();
+
+    oscillator.connect(lowPassFilter);
+    lowPassFilter.connect(gain);
+    gain.connect(audioContext.destination);
+
+    lowPassFilter.type = 'lowpass';
+    lowPassFilter.frequency.value = 1000;
+
+    switch(type) {
+      case 'lofi':
+        oscillator.frequency.value = 220; // A3 note
+        oscillator.type = 'sine';
+        break;
+      case 'rain':
+        oscillator.frequency.setValueAtTime(250, audioContext.currentTime);
+        oscillator.frequency.exponentialRampToValueAtTime(150, audioContext.currentTime + 2);
+        oscillator.type = 'sawtooth';
+        break;
+      case 'forest':
+        oscillator.frequency.value = 200;
+        oscillator.type = 'triangle';
+        break;
+      case 'coffee':
+        oscillator.frequency.value = 240;
+        oscillator.type = 'sine';
+        break;
+    }
+
+    gain.gain.setValueAtTime(0.15, audioContext.currentTime);
+    
+    oscillator.start(audioContext.currentTime);
+    oscillator.stop(audioContext.currentTime + 3600); // 1 hour
+    
+  } catch (e) {
+    console.log('Web Audio API not fully supported');
+  }
+}
+
+musicToggle.addEventListener('click', () => {
+  musicPlayer.classList.toggle('active');
+  musicToggle.classList.toggle('active');
+});
+
+musicOptions.forEach(option => {
+  option.addEventListener('click', () => {
+    const musicType = option.getAttribute('data-music');
+    
+    musicOptions.forEach(opt => opt.classList.remove('active'));
+    option.classList.add('active');
+    
+    currentMusic = musicType;
+    isPlaying = true;
+    
+    // Start playing ambient sound
+    generateAmbientSound(musicType);
+    musicStatus.textContent = `🎵 Playing ${option.textContent}...`;
+  });
+});
+
+volumeControl.addEventListener('input', (e) => {
+  if (audioContext) {
+    const volume = e.target.value / 100;
+    // Volume adjustment would apply to actual audio element if streaming
+  }
+});
+
+// ============================================
 // TIMER FUNCTIONALITY
 // ============================================
 let time = 1500; // 25 minutes
@@ -126,23 +225,23 @@ function resetTimer() {
 }
 
 function playNotification() {
-  // Simple beep notification using Web Audio API
+  // Soft, gentle notification sound
   try {
-    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    const oscillator = audioContext.createOscillator();
-    const gain = audioContext.createGain();
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const oscillator = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
     
     oscillator.connect(gain);
-    gain.connect(audioContext.destination);
+    gain.connect(audioCtx.destination);
     
-    oscillator.frequency.value = 800;
+    oscillator.frequency.value = 528; // Solfeggio frequency (healing tone)
     oscillator.type = 'sine';
     
-    gain.gain.setValueAtTime(0.3, audioContext.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+    gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.8);
     
-    oscillator.start(audioContext.currentTime);
-    oscillator.stop(audioContext.currentTime + 0.5);
+    oscillator.start(audioCtx.currentTime);
+    oscillator.stop(audioCtx.currentTime + 0.8);
   } catch (e) {
     console.log('Audio notification not supported');
   }
