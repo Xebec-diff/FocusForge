@@ -1,12 +1,25 @@
 body {
-  font-family: Arial;
+  font-family: Arial, sans-serif;
   text-align: center;
   background: #0f172a;
   color: white;
+  margin: 0;
+}
+
+main {
+  margin-top: 80px;
 }
 
 .timer {
-  margin-top: 50px;
+  margin-top: 40px;
+}
+
+#time {
+  font-size: 3rem;
+}
+
+.buttons {
+  margin-top: 20px;
 }
 
 button {
@@ -16,4 +29,15 @@ button {
   background: #22c55e;
   color: white;
   cursor: pointer;
+  border-radius: 6px;
+}
+
+button:hover {
+  opacity: 0.8;
+}
+
+#status {
+  margin-top: 20px;
+  font-size: 0.9rem;
+  color: #94a3b8;
 }
