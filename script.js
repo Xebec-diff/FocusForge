@@ -46,14 +46,28 @@ const musicLibrary = {
   coffee: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3'
 };
 
-// Fallback: Use Web Audio API to generate ambient sounds
-function generateAmbientSound(type) {
+// Function to stop current audio
+function stopCurrentAudio() {
   try {
-    // Stop any previously playing sound
     if (currentOscillator) {
       currentOscillator.stop();
       currentOscillator.disconnect();
+      currentOscillator = null;
     }
+    if (currentGainNode) {
+      currentGainNode.disconnect();
+      currentGainNode = null;
+    }
+  } catch (e) {
+    console.log('Error stopping audio:', e);
+  }
+}
+
+// Fallback: Use Web Audio API to generate ambient sounds
+function generateAmbientSound(type) {
+  try {
+    // Stop any previously playing sound FIRST
+    stopCurrentAudio();
 
     if (!audioContext) {
       audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -129,7 +143,7 @@ musicOptions.forEach(option => {
 });
 
 volumeControl.addEventListener('input', (e) => {
-  if (currentGainNode) {
+  if (currentGainNode && audioContext) {
     const volume = e.target.value / 100;
     // Apply volume change to the currently playing sound
     currentGainNode.gain.setValueAtTime(0.15 * volume, audioContext.currentTime);
