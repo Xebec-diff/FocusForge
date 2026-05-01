@@ -35,6 +35,8 @@ let audioContext = null;
 let audioElement = null;
 let currentMusic = null;
 let isPlaying = false;
+let currentOscillator = null;
+let currentGainNode = null;
 
 // Music URLs (using free ambient music sources)
 const musicLibrary = {
@@ -47,6 +49,12 @@ const musicLibrary = {
 // Fallback: Use Web Audio API to generate ambient sounds
 function generateAmbientSound(type) {
   try {
+    // Stop any previously playing sound
+    if (currentOscillator) {
+      currentOscillator.stop();
+      currentOscillator.disconnect();
+    }
+
     if (!audioContext) {
       audioContext = new (window.AudioContext || window.webkitAudioContext)();
     }
@@ -83,10 +91,16 @@ function generateAmbientSound(type) {
         break;
     }
 
-    gain.gain.setValueAtTime(0.15, audioContext.currentTime);
+    // Apply volume from slider (default 50)
+    const volumeValue = volumeControl.value / 100;
+    gain.gain.setValueAtTime(0.15 * volumeValue, audioContext.currentTime);
     
     oscillator.start(audioContext.currentTime);
     oscillator.stop(audioContext.currentTime + 3600); // 1 hour
+    
+    // Store references for volume control and stopping
+    currentOscillator = oscillator;
+    currentGainNode = gain;
     
   } catch (e) {
     console.log('Web Audio API not fully supported');
@@ -115,9 +129,10 @@ musicOptions.forEach(option => {
 });
 
 volumeControl.addEventListener('input', (e) => {
-  if (audioContext) {
+  if (currentGainNode) {
     const volume = e.target.value / 100;
-    // Volume adjustment would apply to actual audio element if streaming
+    // Apply volume change to the currently playing sound
+    currentGainNode.gain.setValueAtTime(0.15 * volume, audioContext.currentTime);
   }
 });
 
