@@ -1,15 +1,26 @@
-let time = 1500; // 25 minutes
-let timer;
+let time = 1500;
+let timer = null;
+
+const timeDisplay = document.getElementById("time");
+const status = document.getElementById("status");
+const startBtn = document.getElementById("startBtn");
+const resetBtn = document.getElementById("resetBtn");
 
 function updateDisplay() {
-  let minutes = Math.floor(time / 60);
-  let seconds = time % 60;
-  document.getElementById("time").innerText =
+  const minutes = Math.floor(time / 60);
+  const seconds = time % 60;
+
+  timeDisplay.textContent =
     `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
 }
 
 function startTimer() {
-  if (timer) return;
+  if (timer) {
+    status.textContent = "Timer already running...";
+    return;
+  }
+
+  status.textContent = "Focus session started 🔥";
 
   timer = setInterval(() => {
     if (time > 0) {
@@ -17,6 +28,8 @@ function startTimer() {
       updateDisplay();
     } else {
       clearInterval(timer);
+      timer = null;
+      status.textContent = "Session complete 🎉";
     }
   }, 1000);
 }
@@ -26,6 +39,10 @@ function resetTimer() {
   timer = null;
   time = 1500;
   updateDisplay();
+  status.textContent = "Timer reset";
 }
+
+startBtn.addEventListener("click", startTimer);
+resetBtn.addEventListener("click", resetTimer);
 
 updateDisplay();
