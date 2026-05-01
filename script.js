@@ -78,3 +78,34 @@ function addTask() {
 }
 
 addTaskBtn.addEventListener("click", addTask);
+// Enter key for tasks
+taskInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") addTask();
+});
+
+// Replace startTimer with start/pause toggle
+function toggleTimer() {
+  if (timer) {
+    clearInterval(timer);
+    timer = null;
+    startBtn.textContent = "Resume";
+    status.textContent = "Paused ⏸";
+  } else {
+    startBtn.textContent = "Pause";
+    status.textContent = "Focus session started 🔥";
+    timer = setInterval(() => {
+      if (time > 0) {
+        time--;
+        updateDisplay();
+      } else {
+        clearInterval(timer);
+        timer = null;
+        startBtn.textContent = "Start";
+        status.textContent = "Session complete 🎉";
+      }
+    }, 1000);
+  }
+}
+
+// Update the event listener too:
+startBtn.addEventListener("click", toggleTimer);
