@@ -41,3 +41,39 @@ button:hover {
   font-size: 0.9rem;
   color: #94a3b8;
 }
+.tasks {
+  margin-top: 50px;
+}
+
+.task-input input {
+  padding: 10px;
+  width: 200px;
+  border: none;
+  border-radius: 5px;
+}
+
+.task-input button {
+  padding: 10px;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin-top: 20px;
+}
+
+li {
+  background: #1e293b;
+  margin: 10px auto;
+  padding: 10px;
+  width: 250px;
+  border-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+li.completed {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
