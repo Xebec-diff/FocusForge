@@ -1,27 +1,29 @@
 /* =============== CSS Variables & Theme =============== */
 :root[data-theme="dark"] {
-  --bg-primary: #0f172a;
-  --bg-secondary: #1e293b;
-  --text-primary: #ffffff;
-  --text-secondary: #94a3b8;
-  --accent: #22c55e;
-  --accent-hover: #16a34a;
-  --border: #334155;
+  --bg-primary: #1a1a2e;
+  --bg-secondary: #2d2d44;
+  --text-primary: #f5e6d3;
+  --text-secondary: #c4a57b;
+  --accent: #e8a87c;
+  --accent-hover: #d99a6f;
+  --border: #3e3e54;
+  --accent-light: #f4d4b8;
 }
 
 :root[data-theme="light"] {
-  --bg-primary: #f8f9fa;
-  --bg-secondary: #ffffff;
-  --text-primary: #1a202c;
-  --text-secondary: #475569;
-  --accent: #22c55e;
-  --accent-hover: #16a34a;
-  --border: #cbd5e1;
+  --bg-primary: #fef8f3;
+  --bg-secondary: #fef4eb;
+  --text-primary: #4a4a4a;
+  --text-secondary: #8b7b6f;
+  --accent: #e8a87c;
+  --accent-hover: #d99a6f;
+  --border: #e8dccb;
+  --accent-light: #fce4d0;
 }
 
 :root {
-  --radius: 6px;
-  --transition: all 0.3s ease;
+  --radius: 16px;
+  --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* =============== General Styles =============== */
@@ -30,19 +32,20 @@
 }
 
 body {
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Poppins", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   text-align: center;
   background: var(--bg-primary);
   color: var(--text-primary);
   margin: 0;
   padding: 0;
   transition: var(--transition);
+  letter-spacing: 0.3px;
 }
 
 main {
-  max-width: 600px;
+  max-width: 650px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 30px 20px;
   min-height: 100vh;
 }
 
@@ -52,55 +55,182 @@ header {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 40px;
-  padding: 20px 0;
+  padding: 25px 0;
   border-bottom: 2px solid var(--border);
 }
 
 header h1 {
   font-size: 2.5rem;
   margin: 0;
-  background: linear-gradient(135deg, #22c55e, #10b981);
+  background: linear-gradient(135deg, #e8a87c, #d4a373);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.header-controls {
+  display: flex;
+  gap: 10px;
+  align-items: center;
 }
 
 .theme-btn {
   background: var(--bg-secondary);
   color: var(--text-primary);
   border: 2px solid var(--border);
-  padding: 8px 16px;
+  padding: 10px 18px;
   border-radius: var(--radius);
   cursor: pointer;
   transition: var(--transition);
-  font-size: 0.9rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  font-family: "Poppins", sans-serif;
 }
 
 .theme-btn:hover {
   background: var(--accent);
   border-color: var(--accent);
   color: white;
+  transform: translateY(-2px);
+}
+
+.music-btn {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 2px solid var(--border);
+  padding: 10px 18px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: var(--transition);
+  font-size: 1rem;
+  font-weight: 500;
+  font-family: "Poppins", sans-serif;
+}
+
+.music-btn:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.music-btn.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+}
+
+/* =============== Music Player =============== */
+.music-player {
+  display: none;
+  background: var(--bg-secondary);
+  padding: 20px;
+  border-radius: var(--radius);
+  margin-bottom: 30px;
+  border: 2px solid var(--border);
+  animation: slideDown 0.4s ease-out;
+}
+
+.music-player.active {
+  display: block;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.music-player h3 {
+  margin: 0 0 15px 0;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.music-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.music-option {
+  background: var(--bg-primary);
+  border: 2px solid var(--border);
+  color: var(--text-secondary);
+  padding: 10px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: var(--transition);
+  font-size: 0.85rem;
+  font-weight: 500;
+  font-family: "Poppins", sans-serif;
+}
+
+.music-option:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.music-option.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+}
+
+.music-controls {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+}
+
+.volume-control {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  max-width: 150px;
+}
+
+.volume-control input {
+  width: 100%;
+  cursor: pointer;
+  accent-color: var(--accent);
+}
+
+.music-status {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-top: 10px;
 }
 
 /* =============== Timer Section =============== */
 .timer {
   background: var(--bg-secondary);
-  padding: 40px;
-  border-radius: 12px;
+  padding: 45px 40px;
+  border-radius: var(--radius);
   margin-bottom: 40px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
   transition: var(--transition);
 }
 
 .timer-type {
   display: flex;
-  gap: 10px;
+  gap: 12px;
   justify-content: center;
-  margin-bottom: 30px;
+  margin-bottom: 35px;
 }
 
 .timer-type-btn {
-  padding: 10px 20px;
+  padding: 12px 24px;
   background: var(--bg-primary);
   color: var(--text-secondary);
   border: 2px solid var(--border);
@@ -108,52 +238,60 @@ header h1 {
   cursor: pointer;
   transition: var(--transition);
   font-weight: 600;
+  font-family: "Poppins", sans-serif;
+  font-size: 0.95rem;
 }
 
 .timer-type-btn.active {
   background: var(--accent);
   color: white;
   border-color: var(--accent);
+  box-shadow: 0 4px 12px rgba(232, 168, 124, 0.3);
 }
 
 .timer-type-btn:hover {
   border-color: var(--accent);
+  transform: translateY(-2px);
 }
 
 #time {
-  font-size: 4rem;
-  font-weight: bold;
-  margin: 20px 0;
+  font-size: 4.5rem;
+  font-weight: 700;
+  margin: 25px 0;
   font-variant-numeric: tabular-nums;
-  letter-spacing: 2px;
+  letter-spacing: 3px;
+  color: var(--accent);
+  font-family: "Poppins", sans-serif;
 }
 
 .timer-controls {
   display: flex;
-  gap: 10px;
+  gap: 12px;
   justify-content: center;
-  margin: 30px 0;
+  margin: 35px 0;
 }
 
 button {
-  padding: 12px 24px;
+  padding: 14px 28px;
   border: none;
   border-radius: var(--radius);
   cursor: pointer;
   font-weight: 600;
   font-size: 1rem;
   transition: var(--transition);
+  font-family: "Poppins", sans-serif;
 }
 
 .primary-btn {
   background: var(--accent);
   color: white;
+  box-shadow: 0 4px 12px rgba(232, 168, 124, 0.3);
 }
 
 .primary-btn:hover {
   background: var(--accent-hover);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.4);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(232, 168, 124, 0.4);
 }
 
 .secondary-btn {
@@ -165,6 +303,7 @@ button {
 .secondary-btn:hover {
   background: var(--border);
   border-color: var(--accent);
+  color: var(--accent);
 }
 
 #status {
@@ -173,6 +312,7 @@ button {
   color: var(--text-secondary);
   min-height: 25px;
   animation: fadeIn 0.3s ease;
+  font-weight: 500;
 }
 
 @keyframes fadeIn {
@@ -186,17 +326,18 @@ button {
 
 /* =============== Statistics =============== */
 .stats {
-  margin-top: 30px;
-  padding-top: 30px;
+  margin-top: 35px;
+  padding-top: 35px;
   border-top: 2px solid var(--border);
 }
 
 .stats h3 {
   margin: 0 0 20px 0;
   color: var(--text-secondary);
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 1.5px;
+  font-weight: 600;
 }
 
 .stat-grid {
@@ -207,9 +348,16 @@ button {
 
 .stat-card {
   background: var(--bg-primary);
-  padding: 15px;
+  padding: 20px;
   border-radius: var(--radius);
-  border: 1px solid var(--border);
+  border: 2px solid var(--border);
+  transition: var(--transition);
+}
+
+.stat-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(232, 168, 124, 0.15);
 }
 
 .stat-label {
@@ -218,59 +366,71 @@ button {
   margin: 0;
   text-transform: uppercase;
   letter-spacing: 1px;
+  font-weight: 600;
 }
 
 .stat-value {
-  font-size: 1.8rem;
-  font-weight: bold;
+  font-size: 2rem;
+  font-weight: 700;
   color: var(--accent);
-  margin: 8px 0 0 0;
+  margin: 10px 0 0 0;
+  font-family: "Poppins", sans-serif;
 }
 
 /* =============== Tasks Section =============== */
 .tasks {
   background: var(--bg-secondary);
-  padding: 30px;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 40px;
+  border-radius: var(--radius);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
 
 .tasks h2 {
   margin-top: 0;
   color: var(--text-primary);
+  font-weight: 700;
+  font-size: 1.8rem;
 }
 
 .task-input {
   display: flex;
-  gap: 10px;
-  margin: 20px 0;
+  gap: 12px;
+  margin: 25px 0;
   justify-content: center;
 }
 
 .task-input input {
-  padding: 12px 16px;
-  width: 250px;
+  padding: 14px 18px;
+  width: 260px;
   border: 2px solid var(--border);
   border-radius: var(--radius);
   background: var(--bg-primary);
   color: var(--text-primary);
   font-size: 1rem;
   transition: var(--transition);
+  font-family: "Poppins", sans-serif;
+}
+
+.task-input input::placeholder {
+  color: var(--text-secondary);
+  opacity: 0.7;
 }
 
 .task-input input:focus {
   outline: none;
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
+  box-shadow: 0 0 0 4px rgba(232, 168, 124, 0.1);
 }
 
 .task-input button {
   background: var(--accent);
   color: white;
+  box-shadow: 0 4px 12px rgba(232, 168, 124, 0.3);
 }
 
 .task-input button:hover {
   background: var(--accent-hover);
+  transform: translateY(-2px);
 }
 
 /* =============== Task Filters =============== */
@@ -278,12 +438,12 @@ button {
   display: flex;
   gap: 10px;
   justify-content: center;
-  margin: 20px 0;
+  margin: 25px 0;
   flex-wrap: wrap;
 }
 
 .filter-btn {
-  padding: 8px 16px;
+  padding: 10px 18px;
   background: var(--bg-primary);
   color: var(--text-secondary);
   border: 2px solid var(--border);
@@ -291,16 +451,20 @@ button {
   cursor: pointer;
   font-size: 0.9rem;
   transition: var(--transition);
+  font-weight: 600;
+  font-family: "Poppins", sans-serif;
 }
 
 .filter-btn.active {
   background: var(--accent);
   color: white;
   border-color: var(--accent);
+  box-shadow: 0 4px 12px rgba(232, 168, 124, 0.3);
 }
 
 .filter-btn:hover {
   border-color: var(--accent);
+  transform: translateY(-2px);
 }
 
 /* =============== Task List =============== */
@@ -313,9 +477,9 @@ ul {
 li {
   background: var(--bg-primary);
   margin: 12px auto;
-  padding: 15px;
+  padding: 16px 18px;
   width: 100%;
-  max-width: 350px;
+  max-width: 360px;
   border-radius: var(--radius);
   display: flex;
   justify-content: space-between;
@@ -325,11 +489,14 @@ li {
   cursor: pointer;
   word-break: break-word;
   text-align: left;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
 }
 
 li:hover {
-  background: var(--border);
   border-color: var(--accent);
+  background: var(--bg-secondary);
+  transform: translateX(4px);
+  box-shadow: 0 4px 12px rgba(232, 168, 124, 0.15);
 }
 
 li.completed {
@@ -344,21 +511,22 @@ li.hidden {
 
 li .deleteBtn {
   background: transparent;
-  color: #ef4444;
-  padding: 4px 8px;
-  margin: 0 0 0 10px;
-  font-size: 1rem;
+  color: #d97066;
+  padding: 6px 10px;
+  margin: 0 0 0 12px;
+  font-size: 1.2rem;
   border: none;
   cursor: pointer;
   flex-shrink: 0;
   transition: var(--transition);
-  border-radius: 4px;
+  border-radius: 8px;
+  font-weight: 600;
 }
 
 li .deleteBtn:hover {
-  color: #dc2626;
-  transform: scale(1.2);
-  background: rgba(239, 68, 68, 0.1);
+  color: #e84c3d;
+  transform: scale(1.15);
+  background: rgba(217, 112, 102, 0.1);
 }
 
 /* =============== Clear Completed Button =============== */
@@ -366,15 +534,18 @@ li .deleteBtn:hover {
   background: transparent;
   color: var(--text-secondary);
   border: 2px solid var(--border);
-  padding: 10px 20px;
+  padding: 12px 24px;
   margin-top: 20px;
   transition: var(--transition);
+  font-weight: 600;
+  font-family: "Poppins", sans-serif;
 }
 
 .clear-btn:hover {
-  background: #ef4444;
-  border-color: #ef4444;
+  background: #d97066;
+  border-color: #d97066;
   color: white;
+  transform: translateY(-2px);
 }
 
 /* =============== Responsive Design =============== */
@@ -383,13 +554,19 @@ li .deleteBtn:hover {
     font-size: 1.8rem;
   }
 
-  .theme-btn {
-    padding: 6px 12px;
-    font-size: 0.8rem;
+  .header-controls {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .theme-btn,
+  .music-btn {
+    padding: 8px 14px;
+    font-size: 0.85rem;
   }
 
   #time {
-    font-size: 3rem;
+    font-size: 3.5rem;
   }
 
   .timer {
@@ -426,8 +603,20 @@ li .deleteBtn:hover {
 
   .filter-btn {
     flex: 1;
-    padding: 6px 12px;
+    padding: 8px 12px;
     font-size: 0.8rem;
+  }
+
+  .music-options {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .music-controls {
+    flex-direction: column;
+  }
+
+  .volume-control {
+    max-width: 100%;
   }
 }
 
